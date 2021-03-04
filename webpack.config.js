@@ -1,12 +1,25 @@
 const webpack = require('webpack');
 const path = require('path');
 const nodeExternals = require('webpack-node-externals');
+const ESLintPlugin = require('eslint-webpack-plugin');
 const buildPath = path.resolve(__dirname, 'dist');
 
 const server = {
-  entry: './src/server/server.js',
+  entry: './src/server/server.ts',
+  module: {
+    rules: [
+      {
+        test: /\.tsx?$/,
+        use: ['ts-loader'],
+        exclude: /node_modules/,
+      },
+    ],
+  },
   plugins: [
-    new webpack.DefinePlugin({ 'global.GENTLY': false })
+    new webpack.DefinePlugin({ 'global.GENTLY': false }),
+    new ESLintPlugin({
+      extensions: ['ts']
+    })
   ],
   optimization: {
     minimize: true,
@@ -26,7 +39,21 @@ const server = {
 };
 
 const client = {
-  entry: './src/client/client.js',
+  entry: './src/client/client.ts',
+  module: {
+    rules: [
+      {
+        test: /\.tsx?$/,
+        use: ['ts-loader'],
+        exclude: /node_modules/,
+      },
+    ],
+  },
+  plugins: [
+    new ESLintPlugin({
+      extensions: ['ts']
+    })
+  ],
   optimization: {
     minimize: true,
   },
